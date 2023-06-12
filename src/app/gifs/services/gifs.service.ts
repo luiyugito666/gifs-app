@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SearchResponse, Gif} from '../interfaces/gifs.interfaces';
 
 @Injectable({providedIn: 'root'})
 export class GifsService {
-  
+  public gifList: Gif[]=[];
   private   _tagsHistory: string[]  = [];
   private   apiKeys: string         = 'YNDrsB86zu6lMiIcaVod8wdWLSUvpkHk'
-  private   serviceURL: string      = 'http://api.giphy.com/v1/gifs';
+  private serviceURL: string = 'http://api.giphy.com/v1/gifs';
+  
+  //https://quicktype.io/ ayuda a tipar
   
   constructor(private http:HttpClient) { }
     
@@ -35,8 +38,10 @@ export class GifsService {
    .set('q',tag)
    
    
-    this.http.get(`${this.serviceURL}/search?`,{params}).subscribe(resp => {
-      console.log(resp);
+    this.http.get<SearchResponse>(`${this.serviceURL}/search?`,{params}).subscribe(resp => {
+      this.gifList = resp.data;
+      console.log({ gifs: this.gifList });
+     
     })
   }
   
